@@ -53,10 +53,10 @@ Duration :
 
 # Useful Debuging Method
 - Check Input Frames
-- Check Saliency Map (Grad-CAM)
+- Check Saliency Map ([Grad-CAM](https://arxiv.org/abs/1610.02391))
 - Check Log and Plot
 
-![renders](https://user-images.githubusercontent.com/30210944/109588322-e46c5280-7b4b-11eb-842d-66e7c60729a2.gif){: width="150" height="200"}
+![renders](https://user-images.githubusercontent.com/30210944/109589890-652c4e00-7b4e-11eb-94b9-cb25230ac860.gif)
 ![input_frames](https://user-images.githubusercontent.com/30210944/109588293-d7e7fa00-7b4b-11eb-8970-659ce1bdeca5.gif)
 ![saliency_map](https://user-images.githubusercontent.com/30210944/109588371-f77f2280-7b4b-11eb-8847-9f4d6e1973a4.gif)
 
