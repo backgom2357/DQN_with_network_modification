@@ -4,3 +4,9 @@ DQN/__pycache__/
 DQN/.vscode/
 
 *.h5
+
+Dueling_DDQN/__pycache__/
+
+.vscode/
+
+*.gif
