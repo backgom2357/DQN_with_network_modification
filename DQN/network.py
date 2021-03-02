@@ -27,3 +27,7 @@ def build_model(frame_size, action_dim, agent_history_length):
     gap = GlobalAveragePooling2D()(output_conv)
     model = Model(inputs=inputs, outputs=gap)
     return model
+
+if __name__=='__main__':
+    model = build_model(84, 4, 4)
+    model.summary()
