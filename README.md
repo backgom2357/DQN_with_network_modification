@@ -5,7 +5,7 @@ Propose fully convolutional network with skip connection which is deeper than th
 
 ![image](https://user-images.githubusercontent.com/30210944/109586121-04017c00-7b48-11eb-9a27-fbd9491d9bce.png)
 
-With skip connection, the network can catch the details (eg. bullets, balls). Althogh layers of the network is increasing, the parameters is still smaller than the previous network (With inputs of the Atari games, the number of parameters in new network is 138,020 and in previous network is 211,620).
+With skip connection, the network can catch the details (eg. bullets, balls). Although layers of the network is increasing, the parameters are still smaller than the previous network (With inputs of the Atari games, the number of parameters in new network is 138,020 and in previous network is 211,620).
 
 
 # 6 Atari Games
