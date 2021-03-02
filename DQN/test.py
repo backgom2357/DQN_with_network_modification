@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+import imageio
 
 from agent import Agent
 from config import Config
@@ -51,7 +52,7 @@ def test(cf, env_name, weights_url, render=False, check_input_frames=False, chec
         # Check Input
         if check_input_frames:
             test_img = np.reshape(next_state, (cf.FRAME_SIZE, cf.FRAME_SIZE, cf.AGENT_HISTORY_LENGHTH))
-            test_img = cv2.resize(test_img, dsize=(300, 300), interpolation=cv2.INTER_AREA)
+            test_img = cv2.resize(test_img, dsize=(150, 200), interpolation=cv2.INTER_AREA)
             cv2.imshow('input image', test_img)
             cv2.waitKey(0)!=ord('l')
             if cv2.waitKey(25)==ord('q') or done:
@@ -64,11 +65,11 @@ def test(cf, env_name, weights_url, render=False, check_input_frames=False, chec
             cm = plt.get_cmap('jet')
 
             # Saliency Map
-            grad_img = generate_grad_cam(model, state, reward, action, next_state, done, 'conv2d_2', output_layer='global_average_pooling2d')
+            grad_img = generate_grad_cam(model, state, 'conv2d_6', output_layer='global_average_pooling2d')
             grad_img = np.reshape(grad_img, (cf.FRAME_SIZE, cf.FRAME_SIZE))
             grad_img = cm(grad_img)[:,:,:3]
             screen = env.render(mode='rgb_array')
-            screen, grad_img = cv2.resize(screen, dsize=(400,500))/255., cv2.resize(grad_img, dsize=(400,500))
+            screen, grad_img = cv2.resize(screen, dsize=(150,200))/255., cv2.resize(grad_img, dsize=(150,200))
             test_img = cv2.addWeighted(screen,0.5,grad_img,0.5,0,dtype=cv2.CV_32F)
             test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
             cv2.imshow('saliency map Value', test_img)
@@ -85,23 +86,19 @@ def test(cf, env_name, weights_url, render=False, check_input_frames=False, chec
             plt.ion()
 
             q = np.array(model(normalize(state))[0])
-            plot_durations(q, is_ipython)
+            fig = plot_durations(q, is_ipython)
             # print(action, q, end='\r')
             print(action, max(q), min(q), sum(q)/action_dim, end='\r')
             plt.ioff()
 
 
-def generate_grad_cam(model, state, reward, action, next_state, done, activation_layer, output_layer):
+def generate_grad_cam(model, state, activation_layer, output_layer):
     """
     This function generate Grad-CAM images for each frames.
 
     Args:
         model (tensorflow.keras.Model): trained model
         state (array-like): state
-        reward (int): reward
-        action (int): action
-        next_state (array-like): next_state
-        done (int): done
         activation_layer (str): name of activation layer
         output_layer (str): name of output layer
 
@@ -123,6 +120,7 @@ def generate_grad_cam(model, state, reward, action, next_state, done, activation
     for i, w in enumerate(weights):
         grad_cam_image += w * layer_output[0, :, :, i]
     
+    grad_cam_image = tf.keras.activations.relu(grad_cam_image)
     grad_cam_image /= np.max(grad_cam_image)
     grad_cam_image = grad_cam_image.numpy()
     grad_cam_image = cv2.resize(grad_cam_image, (width, height))
@@ -160,7 +158,7 @@ def plot_durations(q, is_ipython):
     17: "DOWNLEFTFIRE",
     }
 
-    plt.figure(2)
+    fig = plt.figure(2)
     plt.clf()
     plt.xlabel('Actions')
     plt.ylabel('Q value')
@@ -177,8 +175,9 @@ def plot_durations(q, is_ipython):
     if is_ipython:
         display.clear_output(wait=True)
         display.display(plt.gcf())
+    return fig
 
 if __name__ == "__main__":
     cf = Config()
-    env_setting = [cf.ATARI_GAMES[0], '/home/diominor/Workspace/RL_Papers_Code/model_free/DQN/save_weights/BreakoutDeterministic-v0_rnlk_94.h5']
-    test(cf, *env_setting, render=True, check_saliency_map=True)
+    env_setting = [cf.ATARI_GAMES[0], '/home/diominor/Workspace/DQN_with_network_modification/DQN/save_weights/BreakoutDeterministic-v0_rnlk_94.h5']
+    test(cf, *env_setting, render=True, check_input_frames=True, check_log_plot=True, check_saliency_map=True)

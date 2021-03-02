@@ -174,5 +174,5 @@ def plot_durations(q, is_ipython):
 
 if __name__ == "__main__":
     cf = Config()
-    env_setting = [cf.ATARI_GAMES[6], '/home/backgom2357/RL_Papers_Code/model_free/Dueling_DDQN/save_weights/bbb1.h5']
+    env_setting = [cf.ATARI_GAMES[6], '/home/diominor/Workspace/DQN_with_network_modification/Dueling_DDQN/save_weights/bbb1.h5']
     test(cf, *env_setting, render=True, check_saliency_map=True)
